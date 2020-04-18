@@ -1,0 +1,59 @@
+* {
+    font-family: 'Poppins', serif;
+}
+
+body {
+    background-color: #333541;
+}
+
+.logo {
+    color: #ffff;
+    font-weight: 500;
+}
+
+.btn__main {
+    background-color: #326DE5;
+    color: #ffff;
+    border-radius: 0.6rem;
+}
+
+.input__share {
+    background-color: #383A47;
+    color: #775A93;
+    border-radius: 3px;
+    border: none;
+    height: 40px;
+    width: 300px;
+    padding: 0 0.5rem;
+}
+
+.code__area {
+    min-width: 100%;
+    resize: none;
+    background-color: #383A47;
+    color: #ffff;
+    border: none;
+    min-height: 600px;
+    padding-left: 1rem;
+    font-family: "Courier New", monospace;
+    outline: none;
+}
+
+.result__area {
+    min-width: 100%;
+    resize: none;
+    background-color: #333541;
+    color: #ffff;
+    border: none;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+
+
+
+
+
+
+
+

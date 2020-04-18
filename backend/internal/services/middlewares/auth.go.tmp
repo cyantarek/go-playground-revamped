@@ -1,0 +1,46 @@
+package middlewares
+
+import (
+	"backend/internal/domains"
+	"fmt"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/labstack/echo/v4"
+)
+
+type AuthMw struct {
+	userRepo domains.UserRepository
+}
+
+func NewAuthMw(ur domains.UserRepository) *AuthMw {
+	return &AuthMw{userRepo:ur}
+}
+
+func (a *AuthMw) JwtCookieMW(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		fmt.Println(c.Cookies())
+		cook, err := c.Cookie("token")
+		if err != nil {
+			return c.String(401, err.Error())
+		}
+		
+		var claims jwt.MapClaims
+		tok, err := jwt.ParseWithClaims(cook.Value, &claims, func(t *jwt.Token) (i interface{}, err error) {
+			return []byte("secret"), nil
+		})
+		if err != nil {
+			return c.String(401, err.Error())
+		}
+		
+		if !tok.Valid {
+			return c.String(401, "invalid token supplied")
+		}
+		
+		user := a.userRepo.Exists(claims["google_id"].(string))
+		if user != nil {
+			c.Set("user", user)
+			return next(c)
+		} else {
+			return c.String(401, "user not found")
+		}
+	}
+}

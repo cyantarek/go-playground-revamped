@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package playground;
+
+message CodeRequest {
+    string body = 1;
+}
+
+message CommonRequest {
+    string id = 1;
+}
+
+message FormatCodeResponse {
+    string formatted_code = 1;
+}
+
+message ShareCodeResponse {
+    string code = 1;
+}
+
+message RunResponse {
+    string status = 1;
+    string output = 2;
+    string error = 3;
+    double run_time = 4;
+}
+
+message GetCodeByShareResponse {
+    string body = 1;
+    string share_code = 2;
+    string created_at = 3;
+    string updated_at = 4;
+}
+
+message EmptyRequest {
+
+}
+
+message PingResponse {
+    string message = 1;
+}
+
+service Playground {
+    rpc Ping(EmptyRequest) returns (PingResponse);
+    rpc RunCode (CodeRequest) returns (RunResponse);
+    rpc FormatCode(CodeRequest) returns (FormatCodeResponse);
+    rpc ShareCode(CodeRequest) returns (ShareCodeResponse);
+    rpc GetCodeByShare(CommonRequest) returns (GetCodeByShareResponse);
+}

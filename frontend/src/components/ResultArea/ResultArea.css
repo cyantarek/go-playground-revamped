@@ -1,0 +1,21 @@
+.result__area {
+    min-width: 100%;
+    resize: none;
+    background-color: #333541;
+    color: #ffff;
+    border: none;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+.success {
+    color: #ffff;
+}
+
+.failed {
+    color: red;
+}
+
+.compiling {
+    color: greenyellow;
+}

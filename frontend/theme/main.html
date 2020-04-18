@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-10">
+            <div class="row">
+                <h2 class="logo mx-1">The Go Playground</h2>
+                <button class="btn btn__main mx-1">Run</button>
+                <button class="btn btn__main mx-1">Format</button>
+                <button class="btn btn__main mx-1">Share</button>
+                <input spellcheck="false" type="email" class="input__share mx-1" value="https://play.golang.org/p/3Df98Xa">
+            </div>
+        </div>
+        <div class="col-2 d-flex justify-content-end">
+            <button class="btn btn__main mx-1">About</button>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 px-0">
+            <textarea spellcheck="false" class="code__area py-3">
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("Hello, playground")
+}
+</textarea>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-6">
+            <textarea disabled spellcheck="false" class="result__area" name="" id="">
+Hello, playground.
+
+Program exited.
+            </textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
