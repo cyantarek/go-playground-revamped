@@ -6,24 +6,9 @@ server:
     host: "0.0.0.0"
     port: "5300"
 db:
-  couchbase:
-    host: "0.0.0.0"
-    port: "8091"
-    user: "Administrator"
-    password: "password"
-    bucket:
-      name: "shorter"
-      password: "shorter"
   bolt:
     name: "my.db"
-smtp:
-  host: "smtp.gmail.com"
-  port: "587"
-  username: "cyantarek.cg@gmail.com"
-  password: ""
 security:
   tls:
     key_file: "keys/server.key"
     cert_file: "keys/server.crt"
-worker:
-  count: 5
