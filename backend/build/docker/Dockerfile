@@ -1,6 +1,8 @@
 FROM golang:latest as builder
 
-COPY . /mail-core
+ARG BIN_NAME=playground
+
+COPY . /BIN_NAME
 WORKDIR /mail-core
 
 RUN cd cmd/mail-core && CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o mail-core

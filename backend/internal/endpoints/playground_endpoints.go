@@ -15,7 +15,7 @@ func (p *PlaygroundEndpoint) Ping(ctx context.Context, _ *playground.EmptyReques
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &playground.PingResponse{
 		Message: out.Message,
 	}, nil
@@ -26,7 +26,7 @@ func (p *PlaygroundEndpoint) RunCode(ctx context.Context, req *playground.CodeRe
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &playground.RunResponse{
 		Status:  out.Status,
 		Output:  out.Output,
@@ -40,7 +40,7 @@ func (p *PlaygroundEndpoint) FormatCode(ctx context.Context, req *playground.Cod
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &playground.FormatCodeResponse{
 		FormattedCode: out.FormattedCode,
 	}, nil
@@ -51,7 +51,7 @@ func (p *PlaygroundEndpoint) ShareCode(ctx context.Context, req *playground.Code
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &playground.ShareCodeResponse{
 		Code: out.Code,
 	}, nil

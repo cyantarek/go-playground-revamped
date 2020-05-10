@@ -12,8 +12,8 @@ type Service struct {
 // New constructs the server and returns it
 func New(codeService domains.CodeService) (*Service, error) {
 	srv := Service{
-		codeService:codeService,
+		codeService: codeService,
 	}
-	
+
 	return &srv, nil
 }

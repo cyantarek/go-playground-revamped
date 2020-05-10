@@ -11,6 +11,10 @@ type Config struct {
 			Host string `yaml:"host"`
 			Port string `yaml:"port"`
 		} `yaml:"grpc_web"`
+		REST struct {
+			Host string `yaml:"host"`
+			Port string `yaml:"port"`
+		} `yaml:"rest"`
 	} `yaml:"server"`
 	Db struct {
 		Mongo struct {

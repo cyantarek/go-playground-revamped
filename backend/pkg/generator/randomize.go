@@ -7,7 +7,9 @@ import (
 
 const letterBytes = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890"
 const numberBytes = "1234567890"
+
 var letterBytesShort = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890")
+
 const (
 	letterIdxBits = 6                    // 6 bits to represent a letter index
 	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
@@ -30,7 +32,7 @@ func RandomStringGenerator(n int) string {
 		cache >>= letterIdxBits
 		remain--
 	}
-	
+
 	return string(b)
 }
 
@@ -42,7 +44,7 @@ func ShortLinkIdGenerator(n int) string {
 	for i := range b {
 		b[i] = letterBytesShort[rand.Intn(len(letterBytesShort))]
 	}
-	
+
 	return string(b)
 }
 
@@ -51,12 +53,12 @@ func GenerateAPIKeys(n int) ([]byte, error) {
 	if n == 0 {
 		n = 15
 	}
-	
+
 	b := make([]byte, n)
 	_, err := rand.Read(b)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return b, nil
 }

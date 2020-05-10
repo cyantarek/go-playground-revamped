@@ -1,7 +1,6 @@
 package main
 
 import (
-	"backend/api/playground"
 	"backend/config"
 	"backend/internal/db/redis_service"
 	"backend/internal/endpoints"
@@ -11,6 +10,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/configor"
+	"google.golang.org/grpc"
 	"log"
 	"runtime"
 )
@@ -20,20 +20,34 @@ func main() {
 	
 	cfg := loadConfig()
 	
-	gRPCTransport := transports.BaseGRPCTransport(cfg) // transport layer
+	// transports layers
+	gRPCTransport := transports.BaseGRPCTransport(cfg)
 	gRPCWebTransport := transports.BaseGRPCWebTransport(gRPCTransport.Server(), cfg)
+	httpTransport := transports.BaseHttpTransport(cfg)
 	
+	// db repository layer
 	redisClient := GetRedisCli()
+	rds := redis_service.New(redisClient)
 	
-	rds := redis_service.New(redisClient) // db repository layer
+	// services layer
+	pgService, _ := playgroundsvc.New(rds)
 	
-	pgService, _ := playgroundsvc.New(rds)                                      // service layer
-	pgEndpoints := endpoints.NewPlaygroundEndpoint(pgService)                // endpoints layer
-	playground.RegisterPlaygroundServer(gRPCTransport.Server(), pgEndpoints) // registration
+	// endpoints layer
+	pgEndpoints := endpoints.NewPlaygroundEndpoint(pgService)
 	
-	// run transports
+	// registration
+	gRPCTransport.Register(pgEndpoints)
+	
+	opts := []grpc.DialOption{grpc.WithInsecure()}
+	err := httpTransport.Register(fmt.Sprintf("%s:%s", cfg.Server.Grpc.Host, cfg.Server.Grpc.Port), opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	// run transports in separate goroutines
 	gRPCTransport.Run()
 	gRPCWebTransport.Run()
+	httpTransport.Run()
 	
 	// infinite wait
 	select {}
@@ -42,7 +56,7 @@ func main() {
 func GetRedisCli() *redis.Client {
 	// Redis Connection
 	cli := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", "0.0.0.0", "6379"),
+		Addr: fmt.Sprintf("%s:%s", "0.0.0.0", "6379"),
 	})
 	
 	ping, err := cli.Ping().Result()

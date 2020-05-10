@@ -6,12 +6,15 @@
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
-/* eslint-disable */
 
 var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
+var third_party_google_api_annotations_pb = require('./third_party/google/api/annotations_pb.js');
+goog.object.extend(proto, third_party_google_api_annotations_pb);
+var third_party_protoc$gen$swagger_options_annotations_pb = require('./third_party/protoc-gen-swagger/options/annotations_pb.js');
+goog.object.extend(proto, third_party_protoc$gen$swagger_options_annotations_pb);
 goog.exportSymbol('proto.playground.CodeRequest', null, global);
 goog.exportSymbol('proto.playground.CommonRequest', null, global);
 goog.exportSymbol('proto.playground.EmptyRequest', null, global);

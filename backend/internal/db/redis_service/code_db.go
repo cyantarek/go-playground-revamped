@@ -15,12 +15,12 @@ func (cr *codeRedis) SaveCode(shortCode string, c domains.Code) error {
 	if err != nil {
 		return err
 	}
-	
+
 	err = cr.rdCl.Set(shortCode, b, 0).Err()
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 

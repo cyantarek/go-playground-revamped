@@ -3,7 +3,7 @@
 RANDOM?=$(shell bash -c 'echo $$RANDOM')
 
 proto:
-	protoc -I ./proto --go_out=plugins=grpc:backend/api/playground --js_out=import_style=commonjs:frontend/src/api/playground --grpc-web_out=import_style=commonjs,mode=grpcwebtext:frontend/src/api/playground proto/playground_*.proto
+	protoc -I ./proto -I ./proto/third_party --go_out=plugins=grpc:backend/api/playground --grpc-gateway_out=logtostderr=true:backend/api/playground --js_out=import_style=commonjs:frontend/src/api/playground --grpc-web_out=import_style=commonjs,mode=grpcwebtext:frontend/src/api/playground proto/playground_*.proto
 
 dockerize-all: dockerize-frontend dockerize-backend
 

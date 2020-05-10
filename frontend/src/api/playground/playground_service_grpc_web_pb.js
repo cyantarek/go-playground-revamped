@@ -5,12 +5,16 @@
  */
 
 // GENERATED CODE -- DO NOT EDIT!
-/* eslint-disable */
+
 
 
 const grpc = {};
 grpc.web = require('grpc-web');
 
+
+var third_party_google_api_annotations_pb = require('./third_party/google/api/annotations_pb.js')
+
+var third_party_protoc$gen$swagger_options_annotations_pb = require('./third_party/protoc-gen-swagger/options/annotations_pb.js')
 const proto = {};
 proto.playground = require('./playground_service_pb.js');
 
