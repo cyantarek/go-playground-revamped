@@ -44,7 +44,7 @@ func BaseGRPCWebTransport(srv *grpc.Server, cfg *config.Config) *GRPCWebTranspor
 }
 
 func (transport *GRPCWebTransport) Run() {
-	fmt.Println("gRPC Web server started")
+	log.Println("gRPC Web server started")
 	go func() {
 		log.Fatal(transport.proxy.ListenAndServe())
 	}()

@@ -5,6 +5,9 @@ server:
   grpc_web:
     host: "0.0.0.0"
     port: "5300"
+  rest:
+    host: "0.0.0.0"
+    port: "5400"
 db:
   bolt:
     name: "my.db"

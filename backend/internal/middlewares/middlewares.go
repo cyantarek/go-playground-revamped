@@ -3,6 +3,7 @@ package middlewares
 import (
 	"bytes"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -23,7 +24,7 @@ func Cors(h http.Handler) http.Handler {
 			w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD")
 			return
 		}
-		
+
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		h.ServeHTTP(w, r)
@@ -46,22 +47,22 @@ func (l *loggingStatusRecorder) WriteHeader(code int) {
 func Log(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		loggingHandler := loggingStatusRecorder{w, 200}
-		
+
 		start := time.Now()
-		
+
 		var reqBodyCopy bytes.Buffer
-		
+
 		tee := io.TeeReader(r.Body, &reqBodyCopy)
 		r.Body = ioutil.NopCloser(tee)
-		
+
 		h.ServeHTTP(&loggingHandler, r)
-		
+
 		end := time.Now()
 		duration := end.Sub(start).Nanoseconds() / 1000000
-		
+
 		reqBody, _ := ioutil.ReadAll(&reqBodyCopy)
 		reqBody = nil
-		
+
 		fields := logrus.Fields{
 			"request": logrus.Fields{
 				"host":        r.Host,
@@ -85,9 +86,9 @@ func Log(h http.Handler) http.Handler {
 				"duration(ms)": duration,
 			},
 		}
-		
+
 		fmt.Println(fields)
-		
+
 		//s.logger.WithFields(fields).Info("request handling completed")
 	})
 }
@@ -95,28 +96,28 @@ func Log(h http.Handler) http.Handler {
 func Auth(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
-		
+
 		if token == "" {
 			//s.logger.Warn("token not present")
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		
+
 		h.ServeHTTP(w, r)
 	})
 }
 
 func JwtInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	m, _ := metadata.FromIncomingContext(ctx)
-	
+
 	token := m.Get("authorization")
-	
+
 	if len(token) == 0 {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized: token not found")
 	}
-	
+
 	// if token present, validate it
-	
+
 	h, err := handler(ctx, req)
 	if err != nil {
 		//s.logger.WithField("err", err.Error()).Error("RPC failed with error")

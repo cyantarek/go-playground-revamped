@@ -43,7 +43,7 @@ func BaseGRPCTransport(cfg *config.Config) *GRPCTransport {
 }
 
 func (g *GRPCTransport) Run() {
-	fmt.Println("gRPC server started")
+	log.Println("gRPC server started")
 	go func() {
 		log.Fatal(g.server.Serve(g.lis))
 	}()

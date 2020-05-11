@@ -1,4 +1,4 @@
-package endpoints
+package rpc
 
 import (
 	"backend/api/playground"
