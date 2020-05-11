@@ -33,7 +33,7 @@ func main() {
 	pgService, _ := playgroundsvc.New(rds)
 
 	// endpoints layer
-	pgEndpoints := rpc.NewPlaygroundEndpoint(pgService)
+	pgEndpoints := rpc.NewPlaygroundEndpoints(pgService)
 
 	// registration
 	gRPCTransport.Register(pgEndpoints)

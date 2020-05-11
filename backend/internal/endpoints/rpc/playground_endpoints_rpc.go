@@ -61,6 +61,6 @@ func (p *PlaygroundEndpoint) GetCodeByShare(context.Context, *playground.CommonR
 	panic("implement me")
 }
 
-func NewPlaygroundEndpoint(pgService *playgroundsvc.Service) *PlaygroundEndpoint {
+func NewPlaygroundEndpoints(pgService *playgroundsvc.Service) *PlaygroundEndpoint {
 	return &PlaygroundEndpoint{pgService: pgService}
 }
