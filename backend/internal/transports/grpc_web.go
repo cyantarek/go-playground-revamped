@@ -4,6 +4,7 @@ import (
 	"backend/config"
 	"fmt"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
@@ -44,8 +45,19 @@ func BaseGRPCWebTransport(srv *grpc.Server, cfg *config.Config) *GRPCWebTranspor
 }
 
 func (transport *GRPCWebTransport) Run() {
-	log.Println("gRPC Web server started")
+	log.Println("gRPC Web server started on", transport.proxy.Addr)
 	go func() {
 		log.Fatal(transport.proxy.ListenAndServe())
 	}()
+}
+
+func (transport *GRPCWebTransport) Shutdown() {
+	log.Println("emergency termination call. terminating gRPC Web server")
+	
+	err := transport.proxy.Shutdown(context.Background())
+	if err != nil {
+		log.Println(err)
+	}
+	
+	log.Println("gRPC Web server terminated")
 }

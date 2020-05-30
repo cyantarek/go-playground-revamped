@@ -12,45 +12,54 @@ import (
 	"github.com/jinzhu/configor"
 	"google.golang.org/grpc"
 	"log"
+	"os"
+	"os/signal"
 	"runtime"
+	"syscall"
 )
 
 func main() {
 	runtime.GOMAXPROCS(1)
-
+	
 	cfg := loadConfig()
-
+	
 	// transports layers
 	gRPCTransport := transports.BaseGRPCTransport(cfg)
 	gRPCWebTransport := transports.BaseGRPCWebTransport(gRPCTransport.Server(), cfg)
 	httpTransport := transports.BaseHttpTransport(cfg)
-
+	
 	// db repository layer
 	redisClient := GetRedisCli()
 	rds := redis_service.New(redisClient)
-
+	
 	// services layer
 	pgService, _ := playgroundsvc.New(rds)
-
+	
 	// endpoints layer
 	pgEndpoints := rpc.NewPlaygroundEndpoints(pgService)
-
+	
 	// registration
 	gRPCTransport.Register(pgEndpoints)
-
+	
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 	err := httpTransport.Register(fmt.Sprintf("%s:%s", cfg.Server.Grpc.Host, cfg.Server.Grpc.Port), opts)
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
+	sigChan := make(chan os.Signal)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGSTOP)
+	
 	// run transports in separate goroutines
-	gRPCTransport.Run()
-	gRPCWebTransport.Run()
-	httpTransport.Run()
-
+	go gRPCTransport.Run()
+	go gRPCWebTransport.Run()
+	go httpTransport.Run()
+	
 	// infinite wait
-	select {}
+	<-sigChan
+	gRPCTransport.Shutdown()
+	gRPCWebTransport.Shutdown()
+	httpTransport.Shutdown()
 }
 
 func GetRedisCli() *redis.Client {
@@ -58,20 +67,20 @@ func GetRedisCli() *redis.Client {
 	cli := redis.NewClient(&redis.Options{
 		Addr: fmt.Sprintf("%s:%s", "0.0.0.0", "6379"),
 	})
-
+	
 	ping, err := cli.Ping().Result()
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Redis Service is Offline :  %s \n", err.Error()))
 	}
 	fmt.Println(ping)
-
+	
 	return cli
 }
 
 func loadConfig() *config.Config {
 	var cfg config.Config
 	env := utilities.GetEnv("ENV", "dev")
-
+	
 	switch env {
 	case "dev":
 		err := configor.Load(&cfg, "config/config.dev.yml")
@@ -84,6 +93,6 @@ func loadConfig() *config.Config {
 			log.Fatal(err)
 		}
 	}
-
+	
 	return &cfg
 }

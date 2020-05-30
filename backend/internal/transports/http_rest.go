@@ -51,10 +51,21 @@ func BaseHttpTransport(cfg *config.Config) *HttpTransport {
 }
 
 func (h *HttpTransport) Run() {
-	log.Println("HTTP REST server started")
+	log.Println("HTTP REST server started on", h.srv.Addr)
 	go func() {
 		log.Fatal(h.srv.ListenAndServe())
 	}()
+}
+
+func (h *HttpTransport) Shutdown() {
+	log.Println("emergency termination call. terminating HTTP REST Web server")
+	
+	err := h.srv.Shutdown(context.Background())
+	if err != nil {
+		log.Println(err)
+	}
+	
+	log.Println("HTTP REST server terminated")
 }
 
 func (h *HttpTransport) RunTLS(certFile, keyFile string) {

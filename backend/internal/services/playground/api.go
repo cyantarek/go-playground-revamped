@@ -2,7 +2,7 @@ package playground
 
 import (
 	"backend/internal/domains"
-	"backend/internal/services/sandbox"
+	"backend/internal/pkg/sandbox"
 	"backend/pkg/generator"
 	"fmt"
 	"golang.org/x/net/context"

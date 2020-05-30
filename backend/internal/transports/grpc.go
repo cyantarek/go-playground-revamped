@@ -3,7 +3,7 @@ package transports
 import (
 	"backend/api/playground"
 	"backend/config"
-	"backend/internal/endpoints"
+	"backend/internal/endpoints/rpc"
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -20,7 +20,7 @@ func (g *GRPCTransport) Server() *grpc.Server {
 	return g.server
 }
 
-func (g *GRPCTransport) Register(pgEndpoints *endpoints.PlaygroundEndpoint) {
+func (g *GRPCTransport) Register(pgEndpoints *rpc.PlaygroundEndpoint) {
 	playground.RegisterPlaygroundServer(g.server, pgEndpoints)
 }
 
@@ -43,8 +43,16 @@ func BaseGRPCTransport(cfg *config.Config) *GRPCTransport {
 }
 
 func (g *GRPCTransport) Run() {
-	log.Println("gRPC server started")
+	log.Println("gRPC server started on", g.lis.Addr())
 	go func() {
 		log.Fatal(g.server.Serve(g.lis))
 	}()
+}
+
+func (g *GRPCTransport) Shutdown() {
+	log.Println("emergency termination call. terminating gRPC server")
+	
+	g.server.GracefulStop()
+	
+	log.Println("gRPC server terminated")
 }
