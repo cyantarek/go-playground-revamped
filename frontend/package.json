@@ -11,7 +11,7 @@
     "codemirror": "^5.52.0",
     "google-protobuf": "^3.11.4",
     "grpc-web": "^1.0.7",
-    "prismjs": "^1.19.0",
+    "prismjs": "^1.23.0",
     "react": "^16.12.0",
     "react-ace": "^8.0.0",
     "react-codemirror2": "^6.0.0",
