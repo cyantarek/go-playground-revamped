@@ -1,43 +1,36 @@
 package config
 
-// Config holds the configuration info in a place to be accessed later during runtime
+import (
+	"os"
+)
+
 type Config struct {
-	Server struct {
-		Grpc struct {
-			Host string `yaml:"host"`
-			Port string `yaml:"port"`
-		} `yaml:"grpc"`
-		GrpcWeb struct {
-			Host string `yaml:"host"`
-			Port string `yaml:"port"`
-		} `yaml:"grpc_web"`
-		REST struct {
-			Host string `yaml:"host"`
-			Port string `yaml:"port"`
-		} `yaml:"rest"`
-	} `yaml:"server"`
-	Db struct {
-		Mongo struct {
-			Host     string `yaml:"host"`
-			Port     string `yaml:"port"`
-			User     string `yaml:"user"`
-			Password string `yaml:"password"`
-			DbName   string `yaml:"db_name"`
-		} `yaml:"mongo"`
-	} `yaml:"db"`
-	SMTP struct {
-		Host     string `yaml:"host"`
-		Port     string `yaml:"port"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	} `yaml:"smtp"`
-	Security struct {
-		TLS struct {
-			KeyFile  string `yaml:"key_file"`
-			CertFile string `yaml:"cert_file"`
-		} `yaml:"tls"`
-	} `yaml:"security"`
-	Worker struct {
-		Count int `yaml:"count"`
-	} `yaml:"worker"`
+	HttpPort          string
+	GRPCPort          string
+	APIPort           string
+	TLSCertFile       string
+	TLSKeyFile        string
+	DBHost            string
+	DBPort            string
+	DBName            string
+	DBUser            string
+	DBPassword        string
+	JWTSecret         string
+	JWTRefreshSecret  string
+	MailgunDomain     string
+	MailgunAPIKey     string
+	AuthSkipper       map[string]bool
+	GCPServiceAccount string
+	RedisHost         string
+	RedisPort         string
+	GRPCWebHost       string
+	GRPCWebPort       string
+}
+
+func EnvOrDefault(key, defaultValue string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+
+	return defaultValue
 }

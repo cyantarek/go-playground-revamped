@@ -1,0 +1,77 @@
+version: '3'
+services:
+  app:
+    container_name: go-boilerplate
+    restart: always
+    build: .
+    ports:
+      - 5000:5000
+      - 5001:5001
+    depends_on:
+      - db-postgres
+  db-postgres:
+    image: postgres:latest
+    restart: always
+    container_name: db-postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: saas_db
+    ports:
+      - 5432:5432
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: cyantarek.go@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: newpassword
+    depends_on:
+      - db-postgres
+    ports:
+      - 5050:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+  sentry:
+    image: sentry
+    restart: always
+    container_name: sentry
+    links:
+      - db-postgres
+    ports:
+      - 9001:9000
+    environment:
+      SENTRY_SECRET_KEY: '!!!SECRET!!!'
+      SENTRY_POSTGRES_HOST: db-postgres
+      SENTRY_DB_USER: root
+      SENTRY_DB_PASSWORD: root
+      SENTRY_REDIS_HOST: db-redis
+  cron:
+    image: sentry
+    restart: always
+    links:
+      - db-postgres
+    command: "sentry run cron"
+    environment:
+      SENTRY_SECRET_KEY: '!!!SECRET!!!'
+      SENTRY_POSTGRES_HOST: db-postgres
+      SENTRY_DB_USER: root
+      SENTRY_DB_PASSWORD: root
+      SENTRY_REDIS_HOST: db-redis
+  worker:
+    image: sentry
+    restart: always
+    links:
+      - db-postgres
+    command: "sentry run worker"
+    environment:
+      SENTRY_SECRET_KEY: '!!!SECRET!!!'
+      SENTRY_POSTGRES_HOST: db-postgres
+      SENTRY_DB_USER: root
+      SENTRY_DB_PASSWORD: root
+      SENTRY_REDIS_HOST: db-redis
+volumes:
+  database_postgres:
+  pgadmin:

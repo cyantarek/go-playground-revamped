@@ -3,7 +3,7 @@ import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "../Header/Header";
 
-import {CodeRequest, EmptyRequest} from "../../api/playground/playground_service_pb"
+import {FormatCodeRequest, CodeRunRequest, ShareCodeRequest, EmptyRequest} from "../../api/playground/playground_service_pb"
 import {PlaygroundClient} from "../../api/playground/playground_service_grpc_web_pb"
 import {BrowserRouter, Route} from "react-router-dom";
 import Container from "../Container/Container";
@@ -33,7 +33,7 @@ function App() {
     const handleRun = () => {
         setResult("Compiling...");
 
-        let req = new CodeRequest();
+        let req = new CodeRunRequest();
         req.setBody(code);
 
         playgroundClient.runCode(req, {}, (err, resp) => {
@@ -60,7 +60,7 @@ function App() {
     const handleShareCode = () => {
         setResult("Getting Shareable Link...");
 
-        let req = new CodeRequest();
+        let req = new ShareCodeRequest();
         req.setBody(code);
 
         playgroundClient.shareCode(req, {}, (err, resp) => {
@@ -82,8 +82,9 @@ function App() {
     const handleCodeFormat = () => {
         setResult("Formatting...");
 
-        let req = new CodeRequest();
-        req.setBody(code);
+        let req = new FormatCodeRequest();
+        req.setCode(code);
+        req.setLanguage("go");
 
         playgroundClient.formatCode(req, {}, (err, resp) => {
             if (err != null) {

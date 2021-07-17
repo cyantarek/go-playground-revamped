@@ -2,15 +2,19 @@ package main
 
 import (
 	"backend/config"
-	"backend/internal/db/redis_service"
-	"backend/internal/endpoints/rpc"
-	playgroundsvc "backend/internal/services/playground"
-	"backend/internal/transports"
-	"backend/pkg/utilities"
+	"backend/internal/core/application"
+	"backend/internal/outside/infrastructure/persistance"
+	"backend/internal/outside/infrastructure/sandbox"
+	"backend/internal/outside/interfaces"
+	"backend/internal/pkg/logger"
+	"backend/internal/pkg/middlewares"
+	"backend/internal/pkg/transports/grpc"
+	"backend/internal/pkg/transports/grpcgateway"
+	"backend/internal/pkg/transports/grpcweb"
+	"backend/internal/pkg/transports/http"
+	"context"
 	"fmt"
 	"github.com/go-redis/redis"
-	"github.com/jinzhu/configor"
-	"google.golang.org/grpc"
 	"log"
 	"os"
 	"os/signal"
@@ -18,81 +22,103 @@ import (
 	"syscall"
 )
 
+var GitCommit string
+
 func main() {
+	logger.New()
+	logger.Log.Println("Git tag ver:", GitCommit)
+
+	_ = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+
 	runtime.GOMAXPROCS(1)
-	
-	cfg := loadConfig()
-	
-	// transports layers
-	gRPCTransport := transports.BaseGRPCTransport(cfg)
-	gRPCWebTransport := transports.BaseGRPCWebTransport(gRPCTransport.Server(), cfg)
-	httpTransport := transports.BaseHttpTransport(cfg)
-	
-	// db repository layer
-	redisClient := GetRedisCli()
-	rds := redis_service.New(redisClient)
-	
-	// services layer
-	pgService, _ := playgroundsvc.New(rds)
-	
-	// endpoints layer
-	pgEndpoints := rpc.NewPlaygroundEndpoints(pgService)
-	
-	// registration
-	gRPCTransport.Register(pgEndpoints)
-	
-	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := httpTransport.Register(fmt.Sprintf("%s:%s", cfg.Server.Grpc.Host, cfg.Server.Grpc.Port), opts)
+
+	// =========================================================================
+	// 3rd Party Services Layer
+	// =========================================================================
+
+	// Redis Connection
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: fmt.Sprintf("%s:%s", config.Cfg.RedisHost, config.Cfg.RedisPort),
+	})
+
+	ping, err := redisClient.Ping().Result()
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	sigChan := make(chan os.Signal)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGSTOP)
-	
-	// run transports in separate goroutines
-	go gRPCTransport.Run()
-	go gRPCWebTransport.Run()
-	go httpTransport.Run()
-	
-	// infinite wait
-	<-sigChan
-	gRPCTransport.Shutdown()
-	gRPCWebTransport.Shutdown()
-	httpTransport.Shutdown()
-}
-
-func GetRedisCli() *redis.Client {
-	// Redis Connection
-	cli := redis.NewClient(&redis.Options{
-		Addr: fmt.Sprintf("%s:%s", "0.0.0.0", "6379"),
-	})
-	
-	ping, err := cli.Ping().Result()
-	if err != nil {
-		fmt.Println(fmt.Sprintf("Redis Service is Offline :  %s \n", err.Error()))
-	}
 	fmt.Println(ping)
-	
-	return cli
-}
 
-func loadConfig() *config.Config {
-	var cfg config.Config
-	env := utilities.GetEnv("ENV", "dev")
-	
-	switch env {
-	case "dev":
-		err := configor.Load(&cfg, "config/config.dev.yml")
-		if err != nil {
-			log.Fatal(err)
-		}
-	case "prod":
-		err := configor.Load(&cfg, "config/config.prod.yml")
-		if err != nil {
-			log.Fatal(err)
-		}
+	// =========================================================================
+	// Adapter Layer
+	// =========================================================================
+
+	codeRepository := persistance.NewCodeDBRedis(redisClient)
+	sandboxRepository := sandbox.NewCMDBasedSandbox()
+
+	// =========================================================================
+	// Middleware Layer
+	// =========================================================================
+
+	mws := middlewares.NewMiddleware()
+
+	// =========================================================================
+	// Transport Layer
+	// =========================================================================
+
+	grpcTransport, err := grpc.New(mws)
+	if err != nil {
+		log.Fatal(err)
 	}
-	
-	return &cfg
+
+	// grpc gateway REST transport
+	grpcGatewayTransport := grpcgateway.NewGRPCGateway(mws)
+
+	// grpc web transport
+	grpcWebTransport := grpcweb.NewGRPCWeb(grpcTransport.Server())
+
+	// http transport for web
+	httpTransport := http.New(mws)
+
+	// =========================================================================
+	// Services Layer
+	// =========================================================================
+
+	codeService := application.NewCodeService(codeRepository, sandboxRepository)
+
+	// =========================================================================
+	// Ports Layer
+	// =========================================================================
+
+	codeGRPC := interfaces.NewCodeGRPC(codeService)
+	codeGRPC.Wire(grpcTransport.Server(), grpcGatewayTransport.Server())
+
+	// =========================================================================
+	// Transport Runner Layer
+	// =========================================================================
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGSTOP)
+
+	// run grpc
+	grpcTransport.Run()
+
+	// run grpc gateway
+	grpcGatewayTransport.Run()
+
+	// run grpc web
+	grpcWebTransport.Run()
+
+	// run http transport
+	httpTransport.Run()
+
+	// =========================================================================
+	// Transport Halting Layer
+	// =========================================================================
+
+	shutdownCtx := context.Background()
+
+	<-sigChan
+	grpcTransport.Shutdown(shutdownCtx)
+	grpcGatewayTransport.Shutdown(shutdownCtx)
+	grpcWebTransport.Shutdown(shutdownCtx)
+	httpTransport.Shutdown(shutdownCtx)
 }

@@ -1,31 +1,43 @@
 syntax = "proto3";
 
 package playground;
+option go_package = "backend/pkg/proto/playground";
 
-import "third_party/google/api/annotations.proto";
-import "third_party/protoc-gen-swagger/options/annotations.proto";
+import "google/api/annotations.proto";
 
-message CodeRequest {
-    string body = 1;
-}
-
-message CommonRequest {
-    string id = 1;
+message FormatCodeRequest {
+    string code = 1;
+    string language = 2;
 }
 
 message FormatCodeResponse {
     string formatted_code = 1;
 }
 
+message CommonRequest {
+    string id = 1;
+}
+
+message ShareCodeRequest {
+    string code = 1;
+    string language = 2;
+}
+
 message ShareCodeResponse {
     string code = 1;
 }
 
+message RunCodeRequest {
+    string code = 1;
+    string language = 2;
+}
+
 message RunResponse {
-    string status = 1;
-    string output = 2;
-    string error = 3;
-    double run_time = 4;
+    string run_id = 1;
+    string status = 2;
+    string output = 3;
+    string error = 4;
+    double run_time = 5;
 }
 
 message GetCodeByShareResponse {
@@ -49,19 +61,22 @@ service Playground {
             get: "/api/playground/ping"
         };
     }
-    rpc RunCode (CodeRequest) returns (RunResponse) {
-        option (google.api.http) = {
-            post: "/api/playground/run"
-            body: "*"
-        };
-    }
-    rpc FormatCode(CodeRequest) returns (FormatCodeResponse) {
+    
+    rpc FormatCode(FormatCodeRequest) returns (FormatCodeResponse) {
         option (google.api.http) = {
             post: "/api/playground/format"
             body: "*"
         };
     }
-    rpc ShareCode(CodeRequest) returns (ShareCodeResponse) {
+    
+    rpc RunCode(RunCodeRequest) returns (RunResponse) {
+        option (google.api.http) = {
+            post: "/api/playground/run"
+            body: "*"
+        };
+    }
+    
+    rpc ShareCode(ShareCodeRequest) returns (ShareCodeResponse) {
         option (google.api.http) = {
             post: "/api/playground/share"
             body: "*"

@@ -7,14 +7,14 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 
+/* eslint-disable */
+// @ts-nocheck
+
+
 
 const grpc = {};
 grpc.web = require('grpc-web');
 
-
-var third_party_google_api_annotations_pb = require('./third_party/google/api/annotations_pb.js')
-
-var third_party_protoc$gen$swagger_options_annotations_pb = require('./third_party/protoc-gen-swagger/options/annotations_pb.js')
 const proto = {};
 proto.playground = require('./playground_service_pb.js');
 
@@ -138,7 +138,7 @@ proto.playground.PlaygroundClient.prototype.ping =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.playground.PingResponse>}
- *     A native promise that resolves to the response
+ *     Promise that resolves to the response
  */
 proto.playground.PlaygroundPromiseClient.prototype.ping =
     function(request, metadata) {
@@ -153,96 +153,16 @@ proto.playground.PlaygroundPromiseClient.prototype.ping =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.playground.CodeRequest,
- *   !proto.playground.RunResponse>}
- */
-const methodDescriptor_Playground_RunCode = new grpc.web.MethodDescriptor(
-  '/playground.Playground/RunCode',
-  grpc.web.MethodType.UNARY,
-  proto.playground.CodeRequest,
-  proto.playground.RunResponse,
-  /**
-   * @param {!proto.playground.CodeRequest} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.playground.RunResponse.deserializeBinary
-);
-
-
-/**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.playground.CodeRequest,
- *   !proto.playground.RunResponse>}
- */
-const methodInfo_Playground_RunCode = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.playground.RunResponse,
-  /**
-   * @param {!proto.playground.CodeRequest} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.playground.RunResponse.deserializeBinary
-);
-
-
-/**
- * @param {!proto.playground.CodeRequest} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @param {function(?grpc.web.Error, ?proto.playground.RunResponse)}
- *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.playground.RunResponse>|undefined}
- *     The XHR Node Readable Stream
- */
-proto.playground.PlaygroundClient.prototype.runCode =
-    function(request, metadata, callback) {
-  return this.client_.rpcCall(this.hostname_ +
-      '/playground.Playground/RunCode',
-      request,
-      metadata || {},
-      methodDescriptor_Playground_RunCode,
-      callback);
-};
-
-
-/**
- * @param {!proto.playground.CodeRequest} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @return {!Promise<!proto.playground.RunResponse>}
- *     A native promise that resolves to the response
- */
-proto.playground.PlaygroundPromiseClient.prototype.runCode =
-    function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/playground.Playground/RunCode',
-      request,
-      metadata || {},
-      methodDescriptor_Playground_RunCode);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.MethodDescriptor<
- *   !proto.playground.CodeRequest,
+ *   !proto.playground.FormatCodeRequest,
  *   !proto.playground.FormatCodeResponse>}
  */
 const methodDescriptor_Playground_FormatCode = new grpc.web.MethodDescriptor(
   '/playground.Playground/FormatCode',
   grpc.web.MethodType.UNARY,
-  proto.playground.CodeRequest,
+  proto.playground.FormatCodeRequest,
   proto.playground.FormatCodeResponse,
   /**
-   * @param {!proto.playground.CodeRequest} request
+   * @param {!proto.playground.FormatCodeRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -255,13 +175,13 @@ const methodDescriptor_Playground_FormatCode = new grpc.web.MethodDescriptor(
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.playground.CodeRequest,
+ *   !proto.playground.FormatCodeRequest,
  *   !proto.playground.FormatCodeResponse>}
  */
 const methodInfo_Playground_FormatCode = new grpc.web.AbstractClientBase.MethodInfo(
   proto.playground.FormatCodeResponse,
   /**
-   * @param {!proto.playground.CodeRequest} request
+   * @param {!proto.playground.FormatCodeRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -272,7 +192,7 @@ const methodInfo_Playground_FormatCode = new grpc.web.AbstractClientBase.MethodI
 
 
 /**
- * @param {!proto.playground.CodeRequest} request The
+ * @param {!proto.playground.FormatCodeRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -293,12 +213,12 @@ proto.playground.PlaygroundClient.prototype.formatCode =
 
 
 /**
- * @param {!proto.playground.CodeRequest} request The
+ * @param {!proto.playground.FormatCodeRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.playground.FormatCodeResponse>}
- *     A native promise that resolves to the response
+ *     Promise that resolves to the response
  */
 proto.playground.PlaygroundPromiseClient.prototype.formatCode =
     function(request, metadata) {
@@ -313,16 +233,96 @@ proto.playground.PlaygroundPromiseClient.prototype.formatCode =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.playground.CodeRequest,
+ *   !proto.playground.RunCodeRequest,
+ *   !proto.playground.RunResponse>}
+ */
+const methodDescriptor_Playground_RunCode = new grpc.web.MethodDescriptor(
+  '/playground.Playground/RunCode',
+  grpc.web.MethodType.UNARY,
+  proto.playground.RunCodeRequest,
+  proto.playground.RunResponse,
+  /**
+   * @param {!proto.playground.RunCodeRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.playground.RunResponse.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.playground.RunCodeRequest,
+ *   !proto.playground.RunResponse>}
+ */
+const methodInfo_Playground_RunCode = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.playground.RunResponse,
+  /**
+   * @param {!proto.playground.RunCodeRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.playground.RunResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.playground.RunCodeRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.playground.RunResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.playground.RunResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.playground.PlaygroundClient.prototype.runCode =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/playground.Playground/RunCode',
+      request,
+      metadata || {},
+      methodDescriptor_Playground_RunCode,
+      callback);
+};
+
+
+/**
+ * @param {!proto.playground.RunCodeRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.playground.RunResponse>}
+ *     Promise that resolves to the response
+ */
+proto.playground.PlaygroundPromiseClient.prototype.runCode =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/playground.Playground/RunCode',
+      request,
+      metadata || {},
+      methodDescriptor_Playground_RunCode);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.playground.ShareCodeRequest,
  *   !proto.playground.ShareCodeResponse>}
  */
 const methodDescriptor_Playground_ShareCode = new grpc.web.MethodDescriptor(
   '/playground.Playground/ShareCode',
   grpc.web.MethodType.UNARY,
-  proto.playground.CodeRequest,
+  proto.playground.ShareCodeRequest,
   proto.playground.ShareCodeResponse,
   /**
-   * @param {!proto.playground.CodeRequest} request
+   * @param {!proto.playground.ShareCodeRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -335,13 +335,13 @@ const methodDescriptor_Playground_ShareCode = new grpc.web.MethodDescriptor(
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.playground.CodeRequest,
+ *   !proto.playground.ShareCodeRequest,
  *   !proto.playground.ShareCodeResponse>}
  */
 const methodInfo_Playground_ShareCode = new grpc.web.AbstractClientBase.MethodInfo(
   proto.playground.ShareCodeResponse,
   /**
-   * @param {!proto.playground.CodeRequest} request
+   * @param {!proto.playground.ShareCodeRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -352,7 +352,7 @@ const methodInfo_Playground_ShareCode = new grpc.web.AbstractClientBase.MethodIn
 
 
 /**
- * @param {!proto.playground.CodeRequest} request The
+ * @param {!proto.playground.ShareCodeRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -373,12 +373,12 @@ proto.playground.PlaygroundClient.prototype.shareCode =
 
 
 /**
- * @param {!proto.playground.CodeRequest} request The
+ * @param {!proto.playground.ShareCodeRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.playground.ShareCodeResponse>}
- *     A native promise that resolves to the response
+ *     Promise that resolves to the response
  */
 proto.playground.PlaygroundPromiseClient.prototype.shareCode =
     function(request, metadata) {
@@ -458,7 +458,7 @@ proto.playground.PlaygroundClient.prototype.getCodeByShare =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.playground.GetCodeByShareResponse>}
- *     A native promise that resolves to the response
+ *     Promise that resolves to the response
  */
 proto.playground.PlaygroundPromiseClient.prototype.getCodeByShare =
     function(request, metadata) {

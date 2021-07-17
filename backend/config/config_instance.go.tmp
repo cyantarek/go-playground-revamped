@@ -1,0 +1,20 @@
+package config
+
+var Cfg = Config{
+	HttpPort:         EnvOrDefault("HTTP_PORT", "5000"),
+	APIPort:          EnvOrDefault("API_PORT", "5001"),
+	GRPCPort:         EnvOrDefault("GRPC_PORT", "5002"),
+	DBHost:           EnvOrDefault("DB_PORT", "localhost"),
+	DBPort:           EnvOrDefault("DB_PORT", "5432"),
+	DBName:           EnvOrDefault("DB_NAME", "cyantarek"),
+	DBUser:           EnvOrDefault("DB_USER", "cyantarek"),
+	DBPassword:       EnvOrDefault("DB_PASSWORD", ""),
+	JWTSecret:        EnvOrDefault("JWT_SECRET", "*234230KJHDS"),
+	JWTRefreshSecret: EnvOrDefault("JWT_REFRESH_SECRET", "WE13123??__<>"),
+	AuthSkipper: map[string]bool{
+		"/api/v1/auth/register": true,
+		"/api/v1/auth/login":    true,
+		"/admin/register":       true,
+		"/admin/login":          true,
+	},
+}
