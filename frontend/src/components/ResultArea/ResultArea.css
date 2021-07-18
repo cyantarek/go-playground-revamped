@@ -5,7 +5,8 @@
     color: #ffff;
     border: none;
     overflow: hidden;
-    min-height: 200px;
+    padding-bottom: 2rem;
+    font-size: 0.7rem;
 }
 
 .success {

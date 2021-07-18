@@ -3,9 +3,9 @@ package main
 import (
 	"backend/config"
 	"backend/internal/core/application"
-	"backend/internal/outside/infrastructure/persistance"
-	"backend/internal/outside/infrastructure/sandbox"
-	"backend/internal/outside/interfaces"
+	"backend/internal/outside/adapters/driven/persistance"
+	"backend/internal/outside/adapters/driven/sandbox"
+	"backend/internal/outside/adapters/driving/grpchandler"
 	"backend/internal/pkg/logger"
 	"backend/internal/pkg/middlewares"
 	"backend/internal/pkg/transports/grpc"
@@ -88,7 +88,7 @@ func main() {
 	// Ports Layer
 	// =========================================================================
 
-	codeGRPC := interfaces.NewCodeGRPC(codeService)
+	codeGRPC := grpchandler.NewCodeGRPC(codeService)
 	codeGRPC.Wire(grpcTransport.Server(), grpcGatewayTransport.Server())
 
 	// =========================================================================

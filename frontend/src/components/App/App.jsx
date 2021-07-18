@@ -3,7 +3,7 @@ import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "../Header/Header";
 
-import {FormatCodeRequest, CodeRunRequest, ShareCodeRequest, EmptyRequest} from "../../api/playground/playground_service_pb"
+import {FormatCodeRequest, RunCodeRequest, ShareCodeRequest, EmptyRequest} from "../../api/playground/playground_service_pb"
 import {PlaygroundClient} from "../../api/playground/playground_service_grpc_web_pb"
 import {BrowserRouter, Route} from "react-router-dom";
 import Container from "../Container/Container";
@@ -28,17 +28,19 @@ function App() {
                 }
             }
         })
-    });
+    }, []);
 
     const handleRun = () => {
         setResult("Compiling...");
 
-        let req = new CodeRunRequest();
-        req.setBody(code);
+        let req = new RunCodeRequest();
+        req.setCode(code);
+        req.setLanguage("go");
 
         playgroundClient.runCode(req, {}, (err, resp) => {
             if (resp == null) {
                 if (err.code >= 1000) {
+                    setSuccess(false);
                     setResult(err.message);
                 } else {
                     setResult("We can not contact the server. Please wait after some moment");
@@ -46,13 +48,8 @@ function App() {
             } else {
                 let data = resp.toObject();
 
-                if (data.status === "ok") {
-                    setSuccess(true);
-                    setResult(data.output + "\n\n" + `Runtime: ${data.runTime}s`)
-                } else {
-                    setSuccess(false);
-                    setResult(data.error + "\n\n" + `Runtime: ${data.runTime}s`)
-                }
+                setSuccess(true);
+                setResult(data.output + "\n\n" + `Runtime: ${data.runTime}s`)
             }
         })
     };
@@ -61,7 +58,8 @@ function App() {
         setResult("Getting Shareable Link...");
 
         let req = new ShareCodeRequest();
-        req.setBody(code);
+        req.setCode(code);
+        req.setLanguage("go");
 
         playgroundClient.shareCode(req, {}, (err, resp) => {
             if (resp == null) {
@@ -74,7 +72,7 @@ function App() {
                 let data = resp.toObject();
 
                 setResult("");
-                setShareLinkCode(`https://localhost:3012/p/${data.code}`)
+                setShareLinkCode(`https://localhost:3012/p/${data.shortCode}`)
             }
         })
     };

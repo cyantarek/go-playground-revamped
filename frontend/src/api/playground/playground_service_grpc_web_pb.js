@@ -15,6 +15,7 @@
 const grpc = {};
 grpc.web = require('grpc-web');
 
+
 const proto = {};
 proto.playground = require('./playground_service_pb.js');
 
@@ -234,13 +235,13 @@ proto.playground.PlaygroundPromiseClient.prototype.formatCode =
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.playground.RunCodeRequest,
- *   !proto.playground.RunResponse>}
+ *   !proto.playground.RunCodeResponse>}
  */
 const methodDescriptor_Playground_RunCode = new grpc.web.MethodDescriptor(
   '/playground.Playground/RunCode',
   grpc.web.MethodType.UNARY,
   proto.playground.RunCodeRequest,
-  proto.playground.RunResponse,
+  proto.playground.RunCodeResponse,
   /**
    * @param {!proto.playground.RunCodeRequest} request
    * @return {!Uint8Array}
@@ -248,7 +249,7 @@ const methodDescriptor_Playground_RunCode = new grpc.web.MethodDescriptor(
   function(request) {
     return request.serializeBinary();
   },
-  proto.playground.RunResponse.deserializeBinary
+  proto.playground.RunCodeResponse.deserializeBinary
 );
 
 
@@ -256,10 +257,10 @@ const methodDescriptor_Playground_RunCode = new grpc.web.MethodDescriptor(
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.playground.RunCodeRequest,
- *   !proto.playground.RunResponse>}
+ *   !proto.playground.RunCodeResponse>}
  */
 const methodInfo_Playground_RunCode = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.playground.RunResponse,
+  proto.playground.RunCodeResponse,
   /**
    * @param {!proto.playground.RunCodeRequest} request
    * @return {!Uint8Array}
@@ -267,7 +268,7 @@ const methodInfo_Playground_RunCode = new grpc.web.AbstractClientBase.MethodInfo
   function(request) {
     return request.serializeBinary();
   },
-  proto.playground.RunResponse.deserializeBinary
+  proto.playground.RunCodeResponse.deserializeBinary
 );
 
 
@@ -276,9 +277,9 @@ const methodInfo_Playground_RunCode = new grpc.web.AbstractClientBase.MethodInfo
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.playground.RunResponse)}
+ * @param {function(?grpc.web.Error, ?proto.playground.RunCodeResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.playground.RunResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.playground.RunCodeResponse>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.playground.PlaygroundClient.prototype.runCode =
@@ -297,7 +298,7 @@ proto.playground.PlaygroundClient.prototype.runCode =
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.playground.RunResponse>}
+ * @return {!Promise<!proto.playground.RunCodeResponse>}
  *     Promise that resolves to the response
  */
 proto.playground.PlaygroundPromiseClient.prototype.runCode =
@@ -393,16 +394,16 @@ proto.playground.PlaygroundPromiseClient.prototype.shareCode =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.playground.CommonRequest,
+ *   !proto.playground.CodeByIDRequest,
  *   !proto.playground.GetCodeByShareResponse>}
  */
 const methodDescriptor_Playground_GetCodeByShare = new grpc.web.MethodDescriptor(
   '/playground.Playground/GetCodeByShare',
   grpc.web.MethodType.UNARY,
-  proto.playground.CommonRequest,
+  proto.playground.CodeByIDRequest,
   proto.playground.GetCodeByShareResponse,
   /**
-   * @param {!proto.playground.CommonRequest} request
+   * @param {!proto.playground.CodeByIDRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -415,13 +416,13 @@ const methodDescriptor_Playground_GetCodeByShare = new grpc.web.MethodDescriptor
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.playground.CommonRequest,
+ *   !proto.playground.CodeByIDRequest,
  *   !proto.playground.GetCodeByShareResponse>}
  */
 const methodInfo_Playground_GetCodeByShare = new grpc.web.AbstractClientBase.MethodInfo(
   proto.playground.GetCodeByShareResponse,
   /**
-   * @param {!proto.playground.CommonRequest} request
+   * @param {!proto.playground.CodeByIDRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -432,7 +433,7 @@ const methodInfo_Playground_GetCodeByShare = new grpc.web.AbstractClientBase.Met
 
 
 /**
- * @param {!proto.playground.CommonRequest} request The
+ * @param {!proto.playground.CodeByIDRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -453,7 +454,7 @@ proto.playground.PlaygroundClient.prototype.getCodeByShare =
 
 
 /**
- * @param {!proto.playground.CommonRequest} request The
+ * @param {!proto.playground.CodeByIDRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata

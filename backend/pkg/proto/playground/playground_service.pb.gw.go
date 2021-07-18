@@ -152,7 +152,7 @@ func local_request_Playground_ShareCode_0(ctx context.Context, marshaler runtime
 }
 
 func request_Playground_GetCodeByShare_0(ctx context.Context, marshaler runtime.Marshaler, client PlaygroundClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CommonRequest
+	var protoReq CodeByIDRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -178,7 +178,7 @@ func request_Playground_GetCodeByShare_0(ctx context.Context, marshaler runtime.
 }
 
 func local_request_Playground_GetCodeByShare_0(ctx context.Context, marshaler runtime.Marshaler, server PlaygroundServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CommonRequest
+	var protoReq CodeByIDRequest
 	var metadata runtime.ServerMetadata
 
 	var (

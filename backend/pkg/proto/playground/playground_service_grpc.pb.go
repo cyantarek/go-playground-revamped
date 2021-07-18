@@ -20,9 +20,9 @@ const _ = grpc.SupportPackageIsVersion7
 type PlaygroundClient interface {
 	Ping(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	FormatCode(ctx context.Context, in *FormatCodeRequest, opts ...grpc.CallOption) (*FormatCodeResponse, error)
-	RunCode(ctx context.Context, in *RunCodeRequest, opts ...grpc.CallOption) (*RunResponse, error)
+	RunCode(ctx context.Context, in *RunCodeRequest, opts ...grpc.CallOption) (*RunCodeResponse, error)
 	ShareCode(ctx context.Context, in *ShareCodeRequest, opts ...grpc.CallOption) (*ShareCodeResponse, error)
-	GetCodeByShare(ctx context.Context, in *CommonRequest, opts ...grpc.CallOption) (*GetCodeByShareResponse, error)
+	GetCodeByShare(ctx context.Context, in *CodeByIDRequest, opts ...grpc.CallOption) (*GetCodeByShareResponse, error)
 }
 
 type playgroundClient struct {
@@ -51,8 +51,8 @@ func (c *playgroundClient) FormatCode(ctx context.Context, in *FormatCodeRequest
 	return out, nil
 }
 
-func (c *playgroundClient) RunCode(ctx context.Context, in *RunCodeRequest, opts ...grpc.CallOption) (*RunResponse, error) {
-	out := new(RunResponse)
+func (c *playgroundClient) RunCode(ctx context.Context, in *RunCodeRequest, opts ...grpc.CallOption) (*RunCodeResponse, error) {
+	out := new(RunCodeResponse)
 	err := c.cc.Invoke(ctx, "/playground.Playground/RunCode", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (c *playgroundClient) ShareCode(ctx context.Context, in *ShareCodeRequest, 
 	return out, nil
 }
 
-func (c *playgroundClient) GetCodeByShare(ctx context.Context, in *CommonRequest, opts ...grpc.CallOption) (*GetCodeByShareResponse, error) {
+func (c *playgroundClient) GetCodeByShare(ctx context.Context, in *CodeByIDRequest, opts ...grpc.CallOption) (*GetCodeByShareResponse, error) {
 	out := new(GetCodeByShareResponse)
 	err := c.cc.Invoke(ctx, "/playground.Playground/GetCodeByShare", in, out, opts...)
 	if err != nil {
@@ -84,9 +84,9 @@ func (c *playgroundClient) GetCodeByShare(ctx context.Context, in *CommonRequest
 type PlaygroundServer interface {
 	Ping(context.Context, *EmptyRequest) (*PingResponse, error)
 	FormatCode(context.Context, *FormatCodeRequest) (*FormatCodeResponse, error)
-	RunCode(context.Context, *RunCodeRequest) (*RunResponse, error)
+	RunCode(context.Context, *RunCodeRequest) (*RunCodeResponse, error)
 	ShareCode(context.Context, *ShareCodeRequest) (*ShareCodeResponse, error)
-	GetCodeByShare(context.Context, *CommonRequest) (*GetCodeByShareResponse, error)
+	GetCodeByShare(context.Context, *CodeByIDRequest) (*GetCodeByShareResponse, error)
 	mustEmbedUnimplementedPlaygroundServer()
 }
 
@@ -100,13 +100,13 @@ func (UnimplementedPlaygroundServer) Ping(context.Context, *EmptyRequest) (*Ping
 func (UnimplementedPlaygroundServer) FormatCode(context.Context, *FormatCodeRequest) (*FormatCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FormatCode not implemented")
 }
-func (UnimplementedPlaygroundServer) RunCode(context.Context, *RunCodeRequest) (*RunResponse, error) {
+func (UnimplementedPlaygroundServer) RunCode(context.Context, *RunCodeRequest) (*RunCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RunCode not implemented")
 }
 func (UnimplementedPlaygroundServer) ShareCode(context.Context, *ShareCodeRequest) (*ShareCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ShareCode not implemented")
 }
-func (UnimplementedPlaygroundServer) GetCodeByShare(context.Context, *CommonRequest) (*GetCodeByShareResponse, error) {
+func (UnimplementedPlaygroundServer) GetCodeByShare(context.Context, *CodeByIDRequest) (*GetCodeByShareResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCodeByShare not implemented")
 }
 func (UnimplementedPlaygroundServer) mustEmbedUnimplementedPlaygroundServer() {}
@@ -195,7 +195,7 @@ func _Playground_ShareCode_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _Playground_GetCodeByShare_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CommonRequest)
+	in := new(CodeByIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -207,7 +207,7 @@ func _Playground_GetCodeByShare_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/playground.Playground/GetCodeByShare",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlaygroundServer).GetCodeByShare(ctx, req.(*CommonRequest))
+		return srv.(PlaygroundServer).GetCodeByShare(ctx, req.(*CodeByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

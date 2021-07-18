@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import "./Header.css"
+import ReactShortcut from 'react-shortcut';
 
 function Header(props) {
     return (

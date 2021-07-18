@@ -14,17 +14,13 @@ message FormatCodeResponse {
     string formatted_code = 1;
 }
 
-message CommonRequest {
-    string id = 1;
-}
-
 message ShareCodeRequest {
     string code = 1;
     string language = 2;
 }
 
 message ShareCodeResponse {
-    string code = 1;
+    string short_code = 1;
 }
 
 message RunCodeRequest {
@@ -32,17 +28,19 @@ message RunCodeRequest {
     string language = 2;
 }
 
-message RunResponse {
+message RunCodeResponse {
     string run_id = 1;
-    string status = 2;
     string output = 3;
-    string error = 4;
     double run_time = 5;
 }
 
+message CodeByIDRequest {
+    string id = 1;
+}
+
 message GetCodeByShareResponse {
-    string body = 1;
-    string share_code = 2;
+    string id = 1;
+    string code = 2;
     string created_at = 3;
     string updated_at = 4;
 }
@@ -69,7 +67,7 @@ service Playground {
         };
     }
     
-    rpc RunCode(RunCodeRequest) returns (RunResponse) {
+    rpc RunCode(RunCodeRequest) returns (RunCodeResponse) {
         option (google.api.http) = {
             post: "/api/playground/run"
             body: "*"
@@ -83,7 +81,7 @@ service Playground {
         };
     }
 
-    rpc GetCodeByShare(CommonRequest) returns (GetCodeByShareResponse) {
+    rpc GetCodeByShare(CodeByIDRequest) returns (GetCodeByShareResponse) {
         option (google.api.http) = {
             get: "/api/playground/share/{id}"
         };
