@@ -28,15 +28,13 @@ func (c CMDBasedSandbox) FormatCode(ctx context.Context, code domain.Code) (doma
 	var resultChan = make(chan string)
 	var errChan = make(chan error)
 
-	runID := generator.RandomStringGenerator(5)
-
-	go runSandboxContainer(resultChan, errChan, code, "fmt", runID)
+	go runSandboxContainer(resultChan, errChan, code, "fmt", generator.RandomStringGenerator(5))
 
 	select {
 	case <-ctx.Done():
 		return domain.Code{}, ctx.Err()
 	case result := <-resultChan:
-		return domain.NewCode(code.CodeID(), result), nil
+		return domain.NewCode(code.ID(), result), nil
 	case err := <-errChan:
 		return domain.Code{}, err
 	}

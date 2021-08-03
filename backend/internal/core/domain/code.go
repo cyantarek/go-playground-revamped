@@ -20,7 +20,7 @@ func (c Code) VisitedHowManyTimes() int {
 	return c.visited
 }
 
-func (c Code) CodeID() CodeID {
+func (c Code) ID() CodeID {
 	return c.id
 }
 

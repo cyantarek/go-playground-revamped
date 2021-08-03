@@ -3,9 +3,9 @@ package main
 import (
 	"backend/config"
 	"backend/internal/core/application"
-	"backend/internal/outside/adapters/driven/persistance"
-	"backend/internal/outside/adapters/driven/sandbox"
-	"backend/internal/outside/adapters/driving/grpchandler"
+	"backend/internal/outside/adapter/driven/persistance"
+	"backend/internal/outside/adapter/driven/sandbox"
+	"backend/internal/outside/adapter/driving/grpchandler"
 	"backend/internal/pkg/logger"
 	"backend/internal/pkg/middlewares"
 	"backend/internal/pkg/transports/grpc"

@@ -21,6 +21,7 @@ func (c CodeService) Format(ctx context.Context, data dto.FormatCode) (dto.Forma
 	id := domain.NewCodeID(c.codeRepo.NextID())
 	code := domain.NewCode(id, data.Code)
 
+	// timeout for long running toxic malicious codes
 	ctxCancel, cancel := context.WithTimeout(ctx, time.Second*5)
 	defer cancel()
 
@@ -67,7 +68,7 @@ func (c CodeService) Share(ctx context.Context, data dto.ShareCode) (dto.ShareCo
 	}, nil
 }
 
-func (c CodeService) Expand(ctx context.Context, id string) (dto.GetCodeByID, error) {
+func (c CodeService) GetByID(ctx context.Context, id string) (dto.GetCodeByID, error) {
 	code, err := c.codeRepo.Get(ctx, domain.NewShortCode(id))
 	if err != nil {
 		return dto.GetCodeByID{}, err
@@ -80,7 +81,7 @@ func (c CodeService) Expand(ctx context.Context, id string) (dto.GetCodeByID, er
 	}
 
 	return dto.GetCodeByID{
-		ID:        code.CodeID().String(),
+		ID:        code.ID().String(),
 		Code:      code.Code(),
 		CreatedAt: code.WhenCreated(),
 		UpdatedAt: code.WhenLastUpdated(),

@@ -21,7 +21,7 @@ func (cr *CodeDBRedis) NextID() string {
 
 func (cr *CodeDBRedis) Save(ctx context.Context, c domain.Code) error {
 	code := codeRedis{
-		ID:        c.CodeID().String(),
+		ID:        c.ID().String(),
 		Code:      c.Code(),
 		CreatedAt: c.WhenCreated(),
 		UpdatedAt: c.WhenLastUpdated(),
@@ -32,7 +32,7 @@ func (cr *CodeDBRedis) Save(ctx context.Context, c domain.Code) error {
 		return err
 	}
 
-	err = cr.client.Set(c.CodeID().String(), b, 0).Err()
+	err = cr.client.Set(c.ID().String(), b, 0).Err()
 	if err != nil {
 		return err
 	}

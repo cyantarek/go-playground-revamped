@@ -67,7 +67,7 @@ func (c CodeGRPC) ShareCode(ctx context.Context, request *playgroundproto.ShareC
 }
 
 func (c CodeGRPC) GetCodeByShare(ctx context.Context, request *playgroundproto.CodeByIDRequest) (*playgroundproto.GetCodeByShareResponse, error) {
-	result, err := c.codeService.Expand(ctx, request.GetId())
+	result, err := c.codeService.GetByID(ctx, request.GetId())
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
